@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
         public IEnumerable<WeatherForecastRedis>? Get()
         {
             IDatabase db_ = _conn.GetDatabase(0);
-            RedisValue redisValue_ = db_.StringGet("Summaries");
+            RedisValue redisValue_ = db_.StringGet(_key);
             if(redisValue_.IsNullOrEmpty)
             {
                 return null;
@@ -84,14 +84,37 @@ namespace WebApplication1.Controllers
             return $"【{key}】 成功刪除";
         }
 
-        [HttpPut("{json}", Name = "PutWeatherForecastRedis")]
-        public string Put(string json)
+        [HttpPut("{weather}", Name = "PutWeatherForecastRedis")]
+        public string Put(string weather, string weatherNew)
         {
             IDatabase db_ = _conn.GetDatabase(0);
-            db_.StringSet(_key, json);
+            RedisValue redisValue_ = db_.StringGet(_key);
+            if (redisValue_.IsNullOrEmpty)
+            {
+                return $"【{weather}】 更新為 【{weatherNew}】 失敗";
+            }
+            string jsonString_ = (string)redisValue_;
+            var Summary_ = JsonSerializer.Deserialize<string[]>(jsonString_);
+            if (Summary_ == null)
+            {
+                return $"【{weather}】 更新為 【{weatherNew}】 失敗";
+            }
+
+            // 更新指定的天氣預報內容
+            for(int i = 0; i < Summary_.Length; i++)
+            {
+                if(Summary_[i] == weather)
+                {
+                    Summary_[i] = weatherNew;
+                }
+            }
+
+            string SummaryJsonString_ = JsonSerializer.Serialize(Summary_);
+
+            db_.StringSet(_key, SummaryJsonString_);
 
 
-            return $"【{json}】 成功更新";
+            return $"【{weather}】 更新為 【{weatherNew}】 成功";
         }
     }
 }

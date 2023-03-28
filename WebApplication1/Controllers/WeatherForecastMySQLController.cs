@@ -62,19 +62,19 @@ namespace WebApplication1.Controllers
         /// <summary>
         /// Redis 新增一筆資料
         /// </summary>
-        /// <param name="json">新增的 json 格式資料</param>
+        /// <param name="weather">新增的 json 格式資料</param>
         /// <returns>回傳執行結果</returns>         
         [HttpPost(Name = "PostWeatherForecastMySQL")]
-        public string Post(string json)
+        public string Post(string weather)
         {
             //在 WeatherForecast 資料表新增一筆資料
             using var connection = new MySqlConnection(_builder.ConnectionString);
             connection.Open();
-            string sql = $"INSERT INTO WeatherForecast ( `Summaries` ) VALUES ( '{json}')";
+            string sql = $"INSERT INTO WeatherForecast ( `Summaries` ) VALUES ( '{weather}')";
             MySqlCommand cmd = new(sql, connection);
             int n = cmd.ExecuteNonQuery();
 
-            return $"【{json}】 新增 {n} 筆資料成功";
+            return $"【{weather}】 新增 {n} 筆資料成功";
         }
 
         /// <summary>
@@ -95,17 +95,17 @@ namespace WebApplication1.Controllers
             return $"【{key}】 成功刪除";
         }
 
-        [HttpPut("{json}", Name = "PutWeatherForecastMySQL")]
-        public string Put(string json)
+        [HttpPut("{weather}", Name = "PutWeatherForecastMySQL")]
+        public string Put(string weather, string weatherNew)
         {
             //將 WeatherForecast 資料表中修改 Summaries 欄位值為指定內容
-            string sql = $"UPDATE WeatherForecast SET Summaries='{json}' WHERE id='1'";
+            string sql = $"UPDATE WeatherForecast SET Summaries='{weatherNew}' WHERE Summaries='{weather}'";
             using var connection = new MySqlConnection(_builder.ConnectionString);
             connection.Open();
             MySqlCommand cmd = new(sql, connection);
             int n = cmd.ExecuteNonQuery();
 
-            return $"【{json}】 更新 {n} 筆資料成功";
+            return $"【{weather}】 更新為 【{weatherNew}】 共 {n} 筆資料成功";
         }
     }
 }
