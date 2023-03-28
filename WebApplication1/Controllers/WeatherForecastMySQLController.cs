@@ -18,18 +18,18 @@ namespace WebApplication1.Controllers
             Database = "dev",
         };
 
-        private readonly string _key = "Summaries";
+        private readonly string _field = "Summaries";
 
         public WeatherForecastMySQLController(ILogger<WeatherForecastMySQLController> logger)
         {
             _logger = logger;
-
-            _logger.LogInformation("初始化 WeatherForecastMySQL");
         }
 
         [HttpGet(Name = "GetWeatherForecastMySQL")]
         public IEnumerable<WeatherForecastMySQL> Get()
         {
+            _logger.LogInformation("收到 GetWeatherForecastMySQL");
+
             using var connection = new MySqlConnection(_builder.ConnectionString);
             connection.Open();
 
@@ -45,7 +45,7 @@ namespace WebApplication1.Controllers
             List<string> Summaries_ = new();
             while (reader.Read())
             {
-                var Sum_ = reader.GetString(_key);
+                var Sum_ = reader.GetString(_field);
                 Summaries_.Add(Sum_);
             }
 
@@ -67,6 +67,8 @@ namespace WebApplication1.Controllers
         [HttpPost(Name = "PostWeatherForecastMySQL")]
         public string Post(string weather)
         {
+            _logger.LogInformation("收到 PostWeatherForecastMySQL");
+
             //在 WeatherForecast 資料表新增一筆資料
             using var connection = new MySqlConnection(_builder.ConnectionString);
             connection.Open();
@@ -85,6 +87,8 @@ namespace WebApplication1.Controllers
         [HttpDelete("{key}", Name = "DeleteWeatherForecastMySQL")]
         public string Delete(string key)
         {
+            _logger.LogInformation("收到 DeleteWeatherForecastMySQL");
+
             //刪除 WeatherForecast 資料表中 Summaries 欄位值為指定的資料
             string sql = $"DELETE FROM WeatherForecast WHERE Summaries='{key}'";
             using var connection = new MySqlConnection(_builder.ConnectionString);
@@ -98,6 +102,8 @@ namespace WebApplication1.Controllers
         [HttpPut("{weather}", Name = "PutWeatherForecastMySQL")]
         public string Put(string weather, string weatherNew)
         {
+            _logger.LogInformation("收到 PutWeatherForecastMySQL");
+
             //將 WeatherForecast 資料表中修改 Summaries 欄位值為指定內容
             string sql = $"UPDATE WeatherForecast SET Summaries='{weatherNew}' WHERE Summaries='{weather}'";
             using var connection = new MySqlConnection(_builder.ConnectionString);

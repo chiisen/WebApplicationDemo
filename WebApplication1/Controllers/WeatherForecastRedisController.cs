@@ -17,8 +17,6 @@ namespace WebApplication1.Controllers
         public WeatherForecastRedisController(ILogger<WeatherForecastRedisController> logger)
         {
             _logger = logger;
-
-            _logger.LogInformation("初始化 GetWeatherForecastRedis");
         }
 
         /// <summary>
@@ -29,6 +27,11 @@ namespace WebApplication1.Controllers
         [HttpGet(Name = "GetWeatherForecastRedis")]
         public IEnumerable<WeatherForecastRedis>? Get()
         {
+            Guid myUUId_ = Guid.NewGuid();
+            string convertedUUID_ = myUUId_.ToString();
+
+            _logger.LogInformation($"{convertedUUID_} 🚥 收到 GetWeatherForecastRedis");
+
             IDatabase db_ = _conn.GetDatabase(0);
             RedisValue redisValue_ = db_.StringGet(_key);
             if(redisValue_.IsNullOrEmpty)
@@ -41,6 +44,8 @@ namespace WebApplication1.Controllers
             {
                 return null;
             }
+
+            _logger.LogInformation($"{convertedUUID_} 🚥 🍳撈取 Redis 資料結束");
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecastRedis
             {
@@ -63,8 +68,15 @@ namespace WebApplication1.Controllers
         [ProducesResponseType(400)]
         public string Post(string json)
         {
+            Guid myUUId_ = Guid.NewGuid();
+            string convertedUUID_ = myUUId_.ToString();
+
+            _logger.LogInformation($"{convertedUUID_} 🚥 收到 PostWeatherForecastRedis");
+
             IDatabase db_ = _conn.GetDatabase(0);
             db_.StringSet(_key, json);
+
+            _logger.LogInformation($"{convertedUUID_} 🚥 【{json}】 🌱新增資料成功");
 
             return $"【{json}】 新增成功";
         }
@@ -77,9 +89,15 @@ namespace WebApplication1.Controllers
         [HttpDelete("{key}", Name = "DeleteWeatherForecastRedis")]
         public string Delete(string key)
         {
+            Guid myUUId_ = Guid.NewGuid();
+            string convertedUUID_ = myUUId_.ToString();
+
+            _logger.LogInformation($"{convertedUUID_} 🚥 收到 DeleteWeatherForecastRedis");
+
             IDatabase db_ = _conn.GetDatabase(0);
             db_.KeyDelete(key);
             
+            _logger.LogInformation($"{convertedUUID_} 🚥 【{key}】 成功🔥刪除");
 
             return $"【{key}】 成功刪除";
         }
@@ -87,6 +105,11 @@ namespace WebApplication1.Controllers
         [HttpPut("{weather}", Name = "PutWeatherForecastRedis")]
         public string Put(string weather, string weatherNew)
         {
+            Guid myUUId_ = Guid.NewGuid();
+            string convertedUUID_ = myUUId_.ToString();
+
+            _logger.LogInformation($"{convertedUUID_} 🚥 收到 PutWeatherForecastRedis");
+
             IDatabase db_ = _conn.GetDatabase(0);
             RedisValue redisValue_ = db_.StringGet(_key);
             if (redisValue_.IsNullOrEmpty)
@@ -101,18 +124,31 @@ namespace WebApplication1.Controllers
             }
 
             // 更新指定的天氣預報內容
-            for(int i = 0; i < Summary_.Length; i++)
+            bool find_ = false;
+            for (int i = 0; i < Summary_.Length; i++)
             {
-                if(Summary_[i] == weather)
+                if (Summary_[i] == weather)
                 {
                     Summary_[i] = weatherNew;
+
+                    find_ = true;
                 }
+            }
+
+            if (find_)
+            {
+                _logger.LogInformation($"{convertedUUID_} 🚥 找到【{weather}】");
+            }
+            else
+            {
+                _logger.LogInformation($"{convertedUUID_} 🚥 找到不到【{weather}】");
             }
 
             string SummaryJsonString_ = JsonSerializer.Serialize(Summary_);
 
             db_.StringSet(_key, SummaryJsonString_);
 
+            _logger.LogInformation($"{convertedUUID_} 🚥 【{weather}】 ⚙更新為 【{weatherNew}】 成功");
 
             return $"【{weather}】 更新為 【{weatherNew}】 成功";
         }

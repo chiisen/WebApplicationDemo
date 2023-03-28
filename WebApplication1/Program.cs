@@ -1,4 +1,4 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -7,7 +7,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Use the Seq logging configuration in appsettings.json
+builder.Host.ConfigureLogging(loggingBuilder =>
+    loggingBuilder.AddSeq());
+
 var app = builder.Build();
+app.Logger.LogInformation("🐛🐛🐛🐛🐛🐛🐛🐛🐛 程式啟動 🐛🐛🐛🐛🐛🐛🐛🐛🐛");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
