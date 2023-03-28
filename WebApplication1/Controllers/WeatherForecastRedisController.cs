@@ -137,11 +137,11 @@ namespace WebApplication1.Controllers
 
             if (find_)
             {
-                _logger.LogInformation($"{convertedUUID_} 🚥 找到【{weather}】");
+                _logger.LogInformation($"{convertedUUID_} 🚥 🈶找到【{weather}】");
             }
             else
             {
-                _logger.LogInformation($"{convertedUUID_} 🚥 找到不到【{weather}】");
+                _logger.LogInformation($"{convertedUUID_} 🚥 🈚找到不到【{weather}】");
             }
 
             string SummaryJsonString_ = JsonSerializer.Serialize(Summary_);

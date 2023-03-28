@@ -80,7 +80,7 @@ namespace WebApplication1.Controllers
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 PostWeatherForecastMsSQL");
 
             //在 WeatherForecast 資料表新增一筆資料
-            using SqlConnection connection = new SqlConnection(ConnectionString);
+            using SqlConnection connection = new(ConnectionString);
 
             using SqlCommand command = connection.CreateCommand();
             command.Connection.Open();
@@ -108,7 +108,7 @@ namespace WebApplication1.Controllers
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 DeleteWeatherForecastMsSQL");
 
             //刪除 WeatherForecast 資料表中 Summaries 欄位值為指定的資料
-            using SqlConnection connection = new SqlConnection(ConnectionString);
+            using SqlConnection connection = new(ConnectionString);
 
             string sql = $"DELETE FROM WeatherForecast WHERE Summaries='{key}'";
 
@@ -133,7 +133,7 @@ namespace WebApplication1.Controllers
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 PutWeatherForecastMsSQL");
 
             //將 WeatherForecast 資料表中修改 Summaries 欄位值為指定內容
-            using SqlConnection connection = new SqlConnection(ConnectionString);
+            using SqlConnection connection = new(ConnectionString);
 
             string updateData = $"UPDATE WeatherForecast SET Summaries='{weatherNew}' WHERE Summaries='{weather}'";
 

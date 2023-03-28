@@ -1,4 +1,6 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.Extensions.Configuration;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
@@ -7,9 +9,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 取得 appsettings.json 的 Seq 設定
+var seqJson_ = builder.Configuration.GetSection("Seq");
+
+
 // Use the Seq logging configuration in appsettings.json
 builder.Host.ConfigureLogging(loggingBuilder =>
-    loggingBuilder.AddSeq());
+    loggingBuilder.AddSeq(seqJson_));
 
 var app = builder.Build();
 app.Logger.LogInformation("🐛🐛🐛🐛🐛🐛🐛🐛🐛 程式啟動 🐛🐛🐛🐛🐛🐛🐛🐛🐛");
