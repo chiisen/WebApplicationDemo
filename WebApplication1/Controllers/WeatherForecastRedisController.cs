@@ -11,12 +11,16 @@ namespace WebApplication1.Controllers
     {
         private readonly ILogger<WeatherForecastRedisController> _logger;
 
-        private readonly ConnectionMultiplexer _conn = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+        private readonly RedisSettings _redis;
+        private ConnectionMultiplexer _conn;
         private readonly string _key = "Summaries";
 
-        public WeatherForecastRedisController(ILogger<WeatherForecastRedisController> logger)
+        public WeatherForecastRedisController(ILogger<WeatherForecastRedisController> logger, IRedisSettings redisSetting)
         {
             _logger = logger;
+
+            _redis = (RedisSettings)redisSetting;
+            _conn = ConnectionMultiplexer.Connect($"{_redis.Server}");
         }
 
         /// <summary>

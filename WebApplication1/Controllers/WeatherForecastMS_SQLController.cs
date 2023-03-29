@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using System;
 
 namespace WebApplication1.Controllers
 {
@@ -10,14 +11,18 @@ namespace WebApplication1.Controllers
     {
         private readonly ILogger<WeatherForecastMS_SQLController> _logger;
 
-        private const string ConnectionString =
-        "Server=localhost;Database=dev;User=sa;Password=Pass@word;TrustServerCertificate=true";
+        private readonly MsSqlSettings _msSql;
+
+        private string ConnectionString;
 
         private readonly string _field = "Summaries";
 
-        public WeatherForecastMS_SQLController(ILogger<WeatherForecastMS_SQLController> logger)
+        public WeatherForecastMS_SQLController(ILogger<WeatherForecastMS_SQLController> logger, ISqlSettings msSqlSetting)
         {
             _logger = logger;
+
+            _msSql = (MsSqlSettings)msSqlSetting;
+            ConnectionString = $"Server={_msSql.Server};Database={_msSql.Database};User={_msSql.User};Password={_msSql.Password};TrustServerCertificate={_msSql.TrustServerCertificate}";
         }
 
         [HttpGet(Name = "GetWeatherForecastMsSQL")]

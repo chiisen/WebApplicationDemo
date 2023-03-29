@@ -1,10 +1,11 @@
 ﻿using Microsoft.OpenApi.Models;
 using System.Reflection;
+using WebApplication1;
 
 // 指定短版的 Guid
 int len_ = 12;//指定 Guid 的長度
 Guid myUUId_ = Guid.NewGuid();
-string convertedUUID_ = myUUId_.ToString().Substring(0, len_); ;
+string convertedUUID_ = myUUId_.ToString().Substring(0, len_);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +15,20 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+// 處理 appsettings.json 要傳送的 MS-SQL 設定
+builder.Services.AddSingleton<ISqlSettings, MsSqlSettings>();
+MsSqlSettings MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>();
+builder.Services.AddSingleton<ISqlSettings>(MsSqlSettings_);
+
+// 處理 appsettings.json 要傳送的 Redis 設定
+builder.Services.AddSingleton<IRedisSettings, RedisSettings>();
+RedisSettings RedisSettings_ = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
+builder.Services.AddSingleton<IRedisSettings>(RedisSettings_);
+
+
 // 取的 AssemblyVersion 與 FileVersion
-var AssemblyVersion_ = Assembly.GetEntryAssembly().GetName().Version;
-var FileVersion_ = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+var AssemblyVersion_ = Assembly.GetEntryAssembly()?.GetName().Version;
+var FileVersion_ = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
