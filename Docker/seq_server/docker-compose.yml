@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+    seq_server:
+        image: datalust/seq
+        restart: always
+        container_name: seq_server
+        hostname: seq_server
+        environment:
+          - ACCEPT_EULA=Y
+        ports:
+          - 8900:80
+          - 5341:5341
