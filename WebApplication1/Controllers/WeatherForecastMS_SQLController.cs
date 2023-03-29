@@ -37,9 +37,6 @@ namespace WebApplication1.Controllers
             using SqlCommand cmd_ = conn_.CreateCommand();
             cmd_.Connection.Open();
             cmd_.CommandText = @"SELECT * FROM WeatherForecast;";
-            /*
-            cmd_.Parameters.AddWithValue("@name", name);
-            */
 
             List<string> Summaries_ = new();
             using (conn_)
@@ -92,6 +89,7 @@ namespace WebApplication1.Controllers
 
             // 取得新增資料後自動產生的 id
             command.CommandText = $"INSERT INTO WeatherForecast ( Summaries ) VALUES ( '{weather}')";
+            command.ExecuteScalar();
             command.Connection.Close();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 【{weather}】 🌱新增資料成功");
@@ -114,12 +112,10 @@ namespace WebApplication1.Controllers
 
             //刪除 WeatherForecast 資料表中 Summaries 欄位值為指定的資料
             using SqlConnection connection = new(ConnectionString);
-
-            string sql = $"DELETE FROM WeatherForecast WHERE Summaries='{key}'";
-
             using SqlCommand command = connection.CreateCommand();
             command.Connection.Open();
-            command.CommandText = sql;
+            command.CommandText = "DELETE FROM WeatherForecast WHERE Summaries=@key";
+            command.Parameters.AddWithValue("@key", key);
 
             command.ExecuteNonQuery();
             command.Connection.Close();
@@ -139,12 +135,11 @@ namespace WebApplication1.Controllers
 
             //將 WeatherForecast 資料表中修改 Summaries 欄位值為指定內容
             using SqlConnection connection = new(ConnectionString);
-
-            string updateData = $"UPDATE WeatherForecast SET Summaries='{weatherNew}' WHERE Summaries='{weather}'";
-
             using SqlCommand command = connection.CreateCommand();
             command.Connection.Open();
-            command.CommandText = updateData;
+            command.CommandText = "UPDATE WeatherForecast SET Summaries=@weatherNew WHERE Summaries=@weather";
+            command.Parameters.AddWithValue("@weatherNew", weatherNew);
+            command.Parameters.AddWithValue("@weather", weather);
             command.ExecuteNonQuery();
             command.Connection.Close();
 
