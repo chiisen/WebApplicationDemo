@@ -4,8 +4,7 @@ using WebApplication1;
 
 // 指定短版的 Guid
 int len_ = 12;//指定 Guid 的長度
-Guid myUUId_ = Guid.NewGuid();
-string convertedUUID_ = myUUId_.ToString().Substring(0, len_);
+string convertedUUID_ = Guid.NewGuid().ToString().Substring(0, len_);
 
 var builder = WebApplication.CreateBuilder(args);
 

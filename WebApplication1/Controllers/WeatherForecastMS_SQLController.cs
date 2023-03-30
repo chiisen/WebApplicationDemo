@@ -13,7 +13,7 @@ namespace WebApplication1.Controllers
 
         private readonly MsSqlSettings _msSql;
 
-        private string ConnectionString;
+        private string _connectionString;
 
         private readonly string _field = "Summaries";
 
@@ -22,18 +22,17 @@ namespace WebApplication1.Controllers
             _logger = logger;
 
             _msSql = (MsSqlSettings)msSqlSetting;
-            ConnectionString = $"Server={_msSql.Server};Database={_msSql.Database};User={_msSql.User};Password={_msSql.Password};TrustServerCertificate={_msSql.TrustServerCertificate}";
+            _connectionString = $"Server={_msSql.Server};Database={_msSql.Database};User={_msSql.User};Password={_msSql.Password};TrustServerCertificate={_msSql.TrustServerCertificate}";
         }
 
         [HttpGet(Name = "GetWeatherForecastMsSQL")]
         public IEnumerable<WeatherForecastMS_SQL> Get()
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 GetWeatherForecastMsSQL");
 
-            using SqlConnection conn_ = new(ConnectionString);
+            using SqlConnection conn_ = new(_connectionString);
             using SqlCommand cmd_ = conn_.CreateCommand();
             cmd_.Connection.Open();
             cmd_.CommandText = @"SELECT * FROM WeatherForecast;";
@@ -76,21 +75,21 @@ namespace WebApplication1.Controllers
         [HttpPost(Name = "PostWeatherForecastMsSQL")]
         public string Post(string weather)
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 PostWeatherForecastMsSQL");
 
             //在 WeatherForecast 資料表新增一筆資料
-            using SqlConnection connection = new(ConnectionString);
+            using SqlConnection conn_ = new(_connectionString);
 
-            using SqlCommand command = connection.CreateCommand();
-            command.Connection.Open();
+            using SqlCommand cmd_ = conn_.CreateCommand();
+            cmd_.Connection.Open();
 
             // 取得新增資料後自動產生的 id
-            command.CommandText = $"INSERT INTO WeatherForecast ( Summaries ) VALUES ( '{weather}')";
-            command.ExecuteScalar();
-            command.Connection.Close();
+            cmd_.CommandText = $"INSERT INTO WeatherForecast ( Summaries ) VALUES ( @weather )";
+            cmd_.Parameters.AddWithValue("@weather", weather);
+            cmd_.ExecuteScalar();
+            cmd_.Connection.Close();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 【{weather}】 🌱新增資料成功");
 
@@ -105,20 +104,19 @@ namespace WebApplication1.Controllers
         [HttpDelete("{key}", Name = "DeleteWeatherForecastMsSQL")]
         public string Delete(string key)
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 DeleteWeatherForecastMsSQL");
 
             //刪除 WeatherForecast 資料表中 Summaries 欄位值為指定的資料
-            using SqlConnection connection = new(ConnectionString);
-            using SqlCommand command = connection.CreateCommand();
-            command.Connection.Open();
-            command.CommandText = "DELETE FROM WeatherForecast WHERE Summaries=@key";
-            command.Parameters.AddWithValue("@key", key);
+            using SqlConnection conn_ = new(_connectionString);
+            using SqlCommand cmd_ = conn_.CreateCommand();
+            cmd_.Connection.Open();
+            cmd_.CommandText = "DELETE FROM WeatherForecast WHERE Summaries=@key";
+            cmd_.Parameters.AddWithValue("@key", key);
 
-            command.ExecuteNonQuery();
-            command.Connection.Close();
+            cmd_.ExecuteNonQuery();
+            cmd_.Connection.Close();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 【{key}】 成功🔥刪除");
 
@@ -128,20 +126,19 @@ namespace WebApplication1.Controllers
         [HttpPut("{weather}", Name = "PutWeatherForecastMsSQL")]
         public string Put(string weather, string weatherNew)
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 PutWeatherForecastMsSQL");
 
             //將 WeatherForecast 資料表中修改 Summaries 欄位值為指定內容
-            using SqlConnection connection = new(ConnectionString);
-            using SqlCommand command = connection.CreateCommand();
-            command.Connection.Open();
-            command.CommandText = "UPDATE WeatherForecast SET Summaries=@weatherNew WHERE Summaries=@weather";
-            command.Parameters.AddWithValue("@weatherNew", weatherNew);
-            command.Parameters.AddWithValue("@weather", weather);
-            command.ExecuteNonQuery();
-            command.Connection.Close();
+            using SqlConnection conn_ = new(_connectionString);
+            using SqlCommand cmd_ = conn_.CreateCommand();
+            cmd_.Connection.Open();
+            cmd_.CommandText = "UPDATE WeatherForecast SET Summaries=@weatherNew WHERE Summaries=@weather";
+            cmd_.Parameters.AddWithValue("@weatherNew", weatherNew);
+            cmd_.Parameters.AddWithValue("@weather", weather);
+            cmd_.ExecuteNonQuery();
+            cmd_.Connection.Close();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 【{weather}】 ⚙更新為 【{weatherNew}】 成功");
 

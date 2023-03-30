@@ -31,8 +31,7 @@ namespace WebApplication1.Controllers
         [HttpGet(Name = "GetWeatherForecastRedis")]
         public IEnumerable<WeatherForecastRedis>? Get()
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 GetWeatherForecastRedis");
 
@@ -72,8 +71,7 @@ namespace WebApplication1.Controllers
         [ProducesResponseType(400)]
         public string Post(string json)
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 PostWeatherForecastRedis");
 
@@ -93,8 +91,7 @@ namespace WebApplication1.Controllers
         [HttpDelete("{key}", Name = "DeleteWeatherForecastRedis")]
         public string Delete(string key)
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 DeleteWeatherForecastRedis");
 
@@ -109,8 +106,7 @@ namespace WebApplication1.Controllers
         [HttpPut("{weather}", Name = "PutWeatherForecastRedis")]
         public string Put(string weather, string weatherNew)
         {
-            Guid myUUId_ = Guid.NewGuid();
-            string convertedUUID_ = myUUId_.ToString();
+            string convertedUUID_ = Guid.NewGuid().ToString();
 
             _logger.LogInformation($"{convertedUUID_} 🚥 收到 PutWeatherForecastRedis");
 
