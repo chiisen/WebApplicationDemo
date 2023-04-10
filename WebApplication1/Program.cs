@@ -1,6 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Coravel;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using WebApplication1;
+using WebApplication1.Schedule;
 
 // 指定短版的 Guid
 int len_ = 12;//指定 Guid 的長度
@@ -14,6 +16,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
+
+#region AddSingleton
 // 處理 appsettings.json 要傳送的 MS-SQL 設定
 builder.Services.AddSingleton<ISqlSettings, MsSqlSettings>();
 MsSqlSettings MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>();
@@ -23,6 +27,15 @@ builder.Services.AddSingleton<ISqlSettings>(MsSqlSettings_);
 builder.Services.AddSingleton<IRedisSettings, RedisSettings>();
 RedisSettings RedisSettings_ = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
 builder.Services.AddSingleton<IRedisSettings>(RedisSettings_);
+# endregion AddSingleton
+
+
+# region AddScheduler
+// 註冊 Coravel 的 Scheduler
+builder.Services.AddScheduler();
+
+builder.Services.AddTransient<DemoSchedule>();
+#endregion AddScheduler
 
 
 // 取的 AssemblyVersion 與 FileVersion
@@ -57,6 +70,14 @@ builder.Host.ConfigureLogging(loggingBuilder =>
     loggingBuilder.AddSeq(seqJson_));
 
 var app = builder.Build();
+
+
+//配置 Schedule 任務
+app.Services.UseScheduler(scheduler =>
+{
+    scheduler.Schedule<DemoSchedule>().EveryMinute().PreventOverlapping("DemoScheduleLock").RunOnceAtStart();
+});
+
 
 // 顯示目前的 Seq 基本設定
 string ServerUrl_ = builder.Configuration.GetValue<string>("Seq:ServerUrl");
