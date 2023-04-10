@@ -65,6 +65,8 @@ app.Logger.LogInformation($"目前 Seq 的 ServerUrl {ServerUrl_}");
 string ApiKey_ = builder.Configuration.GetValue<string>("Seq:ApiKey");
 app.Logger.LogInformation($"目前 Seq 的 ApiKey {ApiKey_}");
 
+var AppId_ = Environment.GetEnvironmentVariable("AP_ID");
+app.Logger.LogInformation($"目前的 AppId {AppId_}");
 
 app.Logger.LogInformation($"🐛🐛🐛🐛🐛🐛🐛🐛🐛 {convertedUUID_} 程式啟動 🐛🐛🐛🐛🐛🐛🐛🐛🐛");
 
