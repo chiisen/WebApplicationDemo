@@ -9,3 +9,5 @@
 5. 建立任意 API，對 Redis 進行資料的 CRUD
 6. 綜合 4 與 5 項，將每次執行的內容都寫到 Seq 中
 
+- swagger 測試網址: https://localhost:7174/swagger/index.html
+
