@@ -1,6 +1,6 @@
 ﻿using Coravel.Invocable;
 
-namespace WebApplication1.Schedule
+namespace WebApplicationDemo.Schedules
 {
     public class DemoSchedule : IInvocable
     {

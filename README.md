@@ -11,3 +11,4 @@
 
 - swagger 測試網址: https://localhost:7174/swagger/index.html
 
+- [檔案目錄說明](./Docs/FileDirectoryDescription.md)

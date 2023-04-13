@@ -1,15 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Data;
 using Microsoft.Data.SqlClient;
-using System;
+using System.Data;
+using WebApplicationDemo.Models;
+using WebApplicationDemo.Models.AppSettings.SqlSettings;
 
-namespace WebApplication1.Controllers
+namespace WebApplicationDemo.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastMS_SQLController : ControllerBase
+    public class WeatherForecastMsSQLController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastMS_SQLController> _logger;
+        private readonly ILogger<WeatherForecastMsSQLController> _logger;
 
         private readonly MsSqlSettings _msSql;
 
@@ -17,7 +18,7 @@ namespace WebApplication1.Controllers
 
         private readonly string _field = "Summaries";
 
-        public WeatherForecastMS_SQLController(ILogger<WeatherForecastMS_SQLController> logger, ISqlSettings msSqlSetting)
+        public WeatherForecastMsSQLController(ILogger<WeatherForecastMsSQLController> logger, ISqlSettings msSqlSetting)
         {
             _logger = logger;
 
@@ -44,13 +45,13 @@ namespace WebApplication1.Controllers
                 while (reader_.Read())
                 {
                     var oneField_ = reader_[_field];
-                    if(oneField_ != null)
+                    if (oneField_ != null)
                     {
                         string sum_ = Convert.ToString(oneField_);
                         Summaries_.Add(sum_);
 
                         _logger.LogInformation($"{convertedUUID_} 🚥 🍳撈取 MS-SQL 資料為 {sum_}");
-                    }                    
+                    }
                 }
             }
 

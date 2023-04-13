@@ -1,6 +1,6 @@
-﻿namespace WebApplication1
+﻿namespace WebApplicationDemo.Models
 {
-    public class WeatherForecastMS_SQL
+    public class WeatherForecastRedis
     {
         public DateTime Date { get; set; }
 

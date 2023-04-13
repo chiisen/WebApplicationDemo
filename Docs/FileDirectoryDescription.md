@@ -1,0 +1,8 @@
+- Models
+    - 放 Model 的實作類別的目錄
+- Services
+    - 放 Service 的實作類別的目錄
+- Controllers
+    - 放 Controller 的實作類別的目錄
+- Schedules
+    - 放排程實作類別的目錄
