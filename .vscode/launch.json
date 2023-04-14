@@ -10,14 +10,15 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/WebApplication1/bin/Debug/net6.0/WebApplication1.dll",
+            "program": "${workspaceFolder}/WebApplicationDemo/bin/Debug/net6.0/WebApplicationDemo.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/WebApplication1",
+            "cwd": "${workspaceFolder}/WebApplicationDemo",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
                 "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)",
+                "uriFormat": "%s/swagger/index.html"
             },
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
@@ -25,11 +26,6 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             }
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
         }
     ]
 }
