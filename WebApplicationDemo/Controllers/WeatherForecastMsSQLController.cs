@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using WebApplicationDemo.Models;
 using WebApplicationDemo.Models.AppSettings.SqlSettings;
+using WebApplicationDemo.Models.SQL;
 
 namespace WebApplicationDemo.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Produces("application/json")]
     public class WeatherForecastMsSQLController : ControllerBase
     {
         private readonly ILogger<WeatherForecastMsSQLController> _logger;
@@ -26,8 +27,12 @@ namespace WebApplicationDemo.Controllers
             _connectionString = $"Server={_msSql.Server};Database={_msSql.Database};User={_msSql.User};Password={_msSql.Password};TrustServerCertificate={_msSql.TrustServerCertificate}";
         }
 
+        /// <summary>
+        /// 取得 資料庫 的資料
+        /// </summary>
+        /// <returns></returns>
         [HttpGet(Name = "GetWeatherForecastMsSQL")]
-        public IEnumerable<WeatherForecastMS_SQL> Get()
+        public IEnumerable<WeatherForecastMsSQL> Get()
         {
             string convertedUUID_ = Guid.NewGuid().ToString();
 
@@ -59,7 +64,7 @@ namespace WebApplicationDemo.Controllers
 
             _logger.LogInformation($"{convertedUUID_} 🚥 🍳撈取 MS-SQL 資料結束");
 
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecastMS_SQL
+            return Enumerable.Range(1, 5).Select(index => new WeatherForecastMsSQL
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = Random.Shared.Next(-20, 55),
@@ -69,7 +74,7 @@ namespace WebApplicationDemo.Controllers
         }
 
         /// <summary>
-        /// Redis 新增一筆資料
+        /// 資料庫 新增一筆資料
         /// </summary>
         /// <param name="weather">新增的 json 格式資料</param>
         /// <returns>回傳執行結果</returns>         
@@ -98,7 +103,7 @@ namespace WebApplicationDemo.Controllers
         }
 
         /// <summary>
-        /// Redis 刪除一筆資料
+        /// 資料庫 刪除一筆資料
         /// </summary>
         /// <param name="key">指定要刪除的 Redis Key</param>
         /// <returns>回傳執行結果</returns>
@@ -124,6 +129,12 @@ namespace WebApplicationDemo.Controllers
             return $"【{key}】 成功刪除";
         }
 
+        /// <summary>
+        /// 資料庫 修改一筆資料
+        /// </summary>
+        /// <param name="weather"></param>
+        /// <param name="weatherNew"></param>
+        /// <returns></returns>
         [HttpPut("{weather}", Name = "PutWeatherForecastMsSQL")]
         public string Put(string weather, string weatherNew)
         {

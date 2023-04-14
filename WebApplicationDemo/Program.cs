@@ -1,10 +1,14 @@
 ﻿using Coravel;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
 using WebApplicationDemo.Models.AppSettings.CacheSettings;
 using WebApplicationDemo.Models.AppSettings.RedisSettings;
 using WebApplicationDemo.Models.AppSettings.SqlSettings;
 using WebApplicationDemo.Schedules;
+using WebApplicationDemo.Services.Common;
+
+Console.OutputEncoding = Encoding.Unicode;
 
 // 指定短版的 Guid
 int len_ = 12;//指定 Guid 的長度
@@ -18,8 +22,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-
-#region AddSingleton
+#region 處理 appsettings.json
 // 處理 appsettings.json 要傳送的 MS-SQL 設定
 builder.Services.AddSingleton<ISqlSettings, MsSqlSettings>();
 MsSqlSettings MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>();
@@ -29,7 +32,12 @@ builder.Services.AddSingleton<ISqlSettings>(MsSqlSettings_);
 builder.Services.AddSingleton<ICacheSettings, RedisSettings>();
 RedisSettings RedisSettings_ = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
 builder.Services.AddSingleton<ICacheSettings>(RedisSettings_);
-# endregion AddSingleton
+# endregion 處理 appsettings.json
+
+#region 處理 cache 的連線
+// 處理 cache (redis) 的連線
+builder.Services.AddSingleton<ICacheService, CacheService>();
+#endregion 處理 cache 的連線
 
 
 # region AddScheduler
@@ -45,6 +53,10 @@ var AssemblyVersion_ = Assembly.GetEntryAssembly()?.GetName().Version;
 var FileVersion_ = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
 builder.Services.AddSwaggerGen(options =>
 {
+    // using System.Reflection;
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = $"AssemblyVersion: {AssemblyVersion_}, FileVersion: {FileVersion_}",

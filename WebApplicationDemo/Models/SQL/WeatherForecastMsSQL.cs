@@ -1,6 +1,6 @@
-﻿namespace WebApplicationDemo.Models
+﻿namespace WebApplicationDemo.Models.SQL
 {
-    public class WeatherForecastMS_SQL
+    public class WeatherForecastMsSQL
     {
         public DateTime Date { get; set; }
 

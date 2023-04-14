@@ -1,6 +1,9 @@
-﻿namespace WebApplicationDemo.Models
+﻿namespace WebApplicationDemo.Models.Cache
 {
-    public class WeatherForecastRedis
+    /// <summary>
+    /// 天氣預報資訊
+    /// </summary>
+    public class WeatherForecastData
     {
         public DateTime Date { get; set; }
 
