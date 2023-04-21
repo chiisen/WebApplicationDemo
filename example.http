@@ -1,0 +1,6 @@
+GET https://localhost:7174/WeatherForecastRedis
+Accept: application/json
+
+{
+}
+
