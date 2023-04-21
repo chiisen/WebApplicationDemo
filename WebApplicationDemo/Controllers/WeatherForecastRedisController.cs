@@ -3,7 +3,6 @@ using System.Data;
 using System.Diagnostics;
 using System.Text.Json;
 using WebApplicationDemo.Models;
-using WebApplicationDemo.Models.AppSettings.CacheSettings;
 using WebApplicationDemo.Models.Cache;
 using WebApplicationDemo.Models.Redis;
 using WebApplicationDemo.Services.Common;
@@ -31,6 +30,14 @@ namespace WebApplicationDemo.Controllers
         /// Redis 取得所有資料
         /// </summary>
         /// <returns>回傳執行結果</returns>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     GET /WeatherForecastRedis
+        ///     {
+        ///        "Username": "test007"
+        ///     }
+        /// </remarks>
         [HttpGet(Name = "GetWeatherForecastRedis")]
         public WeatherForecastRedis Get()
         {
