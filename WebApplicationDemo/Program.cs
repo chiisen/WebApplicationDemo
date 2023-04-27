@@ -1,5 +1,4 @@
 ﻿using Coravel;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
