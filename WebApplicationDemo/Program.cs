@@ -1,5 +1,7 @@
 ﻿using Coravel;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Reflection;
 using System.Text;
 using WebApplicationDemo.Models.AppSettings.CacheSettings;
@@ -15,6 +17,11 @@ int len_ = 12;//指定 Guid 的長度
 string convertedUUID_ = Guid.NewGuid().ToString().Substring(0, len_);
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((context, logger) => {
+    logger
+    .ReadFrom.Configuration(context.Configuration)
+    .Enrich.FromLogContext();
+});
 
 // Add services to the container.
 
