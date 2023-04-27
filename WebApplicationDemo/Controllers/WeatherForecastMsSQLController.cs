@@ -32,6 +32,7 @@ namespace WebApplicationDemo.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet(Name = "GetWeatherForecastMsSQL")]
+        [Produces("application/json")]
         public IEnumerable<WeatherForecastMsSQL> Get()
         {
             string convertedUUID_ = Guid.NewGuid().ToString();
@@ -79,6 +80,7 @@ namespace WebApplicationDemo.Controllers
         /// <param name="weather">新增的 json 格式資料</param>
         /// <returns>回傳執行結果</returns>         
         [HttpPost(Name = "PostWeatherForecastMsSQL")]
+        [Produces("application/json")]
         public string Post(string weather)
         {
             string convertedUUID_ = Guid.NewGuid().ToString();
@@ -108,6 +110,7 @@ namespace WebApplicationDemo.Controllers
         /// <param name="key">指定要刪除的 Redis Key</param>
         /// <returns>回傳執行結果</returns>
         [HttpDelete("{key}", Name = "DeleteWeatherForecastMsSQL")]
+        [Produces("application/json")]
         public string Delete(string key)
         {
             string convertedUUID_ = Guid.NewGuid().ToString();
@@ -136,6 +139,7 @@ namespace WebApplicationDemo.Controllers
         /// <param name="weatherNew"></param>
         /// <returns></returns>
         [HttpPut("{weather}", Name = "PutWeatherForecastMsSQL")]
+        [Produces("application/json")]
         public string Put(string weather, string weatherNew)
         {
             string convertedUUID_ = Guid.NewGuid().ToString();

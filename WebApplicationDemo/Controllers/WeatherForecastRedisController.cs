@@ -39,6 +39,7 @@ namespace WebApplicationDemo.Controllers
         ///     }
         /// </remarks>
         [HttpGet(Name = "GetWeatherForecastRedis")]
+        [Produces("application/json")]
         public WeatherForecastRedis Get()
         {
             try
@@ -108,6 +109,7 @@ namespace WebApplicationDemo.Controllers
         /// <param name="json">新增的 json 格式資料</param>
         /// <returns>回傳執行結果</returns>
         [HttpPost(Name = "PostWeatherForecastRedis")]
+        [Produces("application/json")]
         public string Post(string json)
         {
             try
@@ -140,6 +142,7 @@ namespace WebApplicationDemo.Controllers
         /// <param name="key">指定要刪除的 Redis Key</param>
         /// <returns>回傳執行結果</returns>
         [HttpDelete("{key}", Name = "DeleteWeatherForecastRedis")]
+        [Produces("application/json")]
         public string Delete(string key)
         {
             try
@@ -173,6 +176,7 @@ namespace WebApplicationDemo.Controllers
         /// <param name="weatherNew"></param>
         /// <returns></returns>
         [HttpPut("{weather}", Name = "PutWeatherForecastRedis")]
+        [Produces("application/json")]
         public string Put(string weather, string weatherNew)
         {
             try
