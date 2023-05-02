@@ -51,6 +51,7 @@ builder.Services.AddSingleton<ICacheService, CacheService>();
 builder.Services.AddScheduler();
 
 builder.Services.AddTransient<DemoSchedule>();
+builder.Services.AddTransient<PreventOverlappingSchedule>();
 #endregion AddScheduler
 
 
@@ -92,12 +93,17 @@ builder.Host.ConfigureLogging(loggingBuilder =>
 var app = builder.Build();
 
 
+# region 配置 Schedule 任務
 //配置 Schedule 任務
 app.Services.UseScheduler(scheduler =>
 {
-    scheduler.Schedule<DemoSchedule>().EveryMinute().PreventOverlapping("DemoScheduleLock").RunOnceAtStart();
-});
+    // 呼叫 DemoSchedule 類別，每分鐘執行一次，並且在啟動時執行一次
+    //scheduler.Schedule<DemoSchedule>().EverySeconds(10).PreventOverlapping("DemoScheduleLock").RunOnceAtStart();
 
+    // 呼叫 PreventOverlappingSchedule 類別，每10秒執行一次，並且在啟動時執行一次，由於 PreventOverlapping 會防止重複執行，30秒才會執行下一次
+    scheduler.Schedule<PreventOverlappingSchedule>().EverySeconds(10).PreventOverlapping("PreventOverlappingScheduleLock").RunOnceAtStart();
+});
+#endregion 配置 Schedule 任務
 
 // 顯示目前的 Seq 基本設定
 string ServerUrl_ = builder.Configuration.GetValue<string>("Seq:ServerUrl");
