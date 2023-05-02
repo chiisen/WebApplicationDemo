@@ -15,3 +15,9 @@ scheduler.Schedule<DemoSchedule>().EveryMinute().PreventOverlapping("DemoSchedul
     - Overlapping(重疊)
 
 呼叫 PreventOverlappingSchedule 類別，每10秒執行一次，並且在啟動時執行一次，由於 PreventOverlapping 會防止重複執行，所以 20 秒那次會取消，30秒後才會執行下一次
+
+- At minute 0,20, and 40. 
+    - Cron 的參數規則請參考: https://crontab.guru/
+```csharp=
+scheduler.Schedule<CronSchedule>().Cron("0,20,40 * * * *").Zoned(TimeZoneInfo.Local);
+```

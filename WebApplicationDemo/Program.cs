@@ -52,6 +52,7 @@ builder.Services.AddScheduler();
 
 builder.Services.AddTransient<DemoSchedule>();
 builder.Services.AddTransient<PreventOverlappingSchedule>();
+builder.Services.AddTransient<CronSchedule>();
 #endregion AddScheduler
 
 
@@ -97,11 +98,14 @@ var app = builder.Build();
 //配置 Schedule 任務
 app.Services.UseScheduler(scheduler =>
 {
-    // 呼叫 DemoSchedule 類別，每分鐘執行一次，並且在啟動時執行一次
+    // ! 呼叫 DemoSchedule 類別，每分鐘執行一次，並且在啟動時執行一次
     //scheduler.Schedule<DemoSchedule>().EverySeconds(10).PreventOverlapping("DemoScheduleLock").RunOnceAtStart();
 
-    // 呼叫 PreventOverlappingSchedule 類別，每10秒執行一次，並且在啟動時執行一次，由於 PreventOverlapping 會防止重複執行，30秒才會執行下一次
-    scheduler.Schedule<PreventOverlappingSchedule>().EverySeconds(10).PreventOverlapping("PreventOverlappingScheduleLock").RunOnceAtStart();
+    // ! 呼叫 PreventOverlappingSchedule 類別，每10秒執行一次，並且在啟動時執行一次，由於 PreventOverlapping 會防止重複執行，所以 20 秒那次會取消，30秒後才會執行下一次
+    //scheduler.Schedule<PreventOverlappingSchedule>().EverySeconds(10).PreventOverlapping("PreventOverlappingScheduleLock").RunOnceAtStart();
+
+    // ! At minute 0,20, and 40.
+    scheduler.Schedule<CronSchedule>().Cron("0,20,40 * * * *").Zoned(TimeZoneInfo.Local);
 });
 #endregion 配置 Schedule 任務
 
