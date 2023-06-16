@@ -21,7 +21,7 @@ namespace WebApplicationDemo.Services.Common
 
                 _redis = (RedisSettings)redisSetting;
 
-                string server_ = _redis.Server;
+                var server_ = _redis.Server;
 
                 _logger.LogInformation($"Redis 開始連線網址: {server_}");
 
@@ -33,33 +33,27 @@ namespace WebApplicationDemo.Services.Common
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
-                _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
+                _logger!.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
             }
         }
         public Tuple<bool, string> GetCacheKey(string key)
         {
             try
             {
-                if(_db == null)
-                {
-                    string errorMsg_ = "Redis 無法連線!";
-                    _logger.LogError(errorMsg_);
-                    return Tuple.Create(false, errorMsg_);
-                }
-                RedisValue redisValue_ = _db.StringGet(key);
-                if (redisValue_.IsNullOrEmpty)
+                var redisValue = _db.StringGet(key);
+                if (redisValue.IsNullOrEmpty)
                 {
                     return Tuple.Create(false, $"{key} 沒有填值");
                 }
-                string jsonString_ = (string)redisValue_;
-                return Tuple.Create(true, jsonString_);
+                var jsonString = (string)redisValue;
+                return Tuple.Create(true, jsonString);
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
                 return Tuple.Create(false, "執行發生例外!");
             }
@@ -69,7 +63,7 @@ namespace WebApplicationDemo.Services.Common
         {
             try
             {
-                if (_db == null)
+                if (_db is null)
                 {
                     _logger.LogError("Redis 無法連線!");
                     return false;
@@ -79,8 +73,8 @@ namespace WebApplicationDemo.Services.Common
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
                 return false;
             }
@@ -90,7 +84,7 @@ namespace WebApplicationDemo.Services.Common
         {
             try
             {
-                if (_db == null)
+                if (_db is null)
                 {
                     _logger.LogError("Redis 無法連線!");
                     return false;
@@ -100,8 +94,8 @@ namespace WebApplicationDemo.Services.Common
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
                 return false;
             }

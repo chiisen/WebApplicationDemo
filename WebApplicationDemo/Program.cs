@@ -31,13 +31,13 @@ builder.Services.AddEndpointsApiExplorer();
 #region 處理 appsettings.json
 // 處理 appsettings.json 要傳送的 MS-SQL 設定
 builder.Services.AddSingleton<ISqlSettings, MsSqlSettings>();
-MsSqlSettings MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>();
+var MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>();
 builder.Services.AddSingleton<ISqlSettings>(MsSqlSettings_);
 
 // 處理 appsettings.json 要傳送的 Redis 設定
 builder.Services.AddSingleton<ICacheSettings, RedisSettings>();
-RedisSettings RedisSettings_ = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
-builder.Services.AddSingleton<ICacheSettings>(RedisSettings_);
+var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
+builder.Services.AddSingleton<ICacheSettings>(redisSettings);
 # endregion 處理 appsettings.json
 
 #region 處理 cache 的連線
@@ -57,8 +57,8 @@ builder.Services.AddTransient<CronSchedule>();
 
 
 // 取的 AssemblyVersion 與 FileVersion
-var AssemblyVersion_ = Assembly.GetEntryAssembly()?.GetName().Version;
-var FileVersion_ = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
+var assemblyVersion = Assembly.GetEntryAssembly()?.GetName().Version;
+var fileVersion = Assembly.GetEntryAssembly()?.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
 builder.Services.AddSwaggerGen(options =>
 {
     // using System.Reflection;
@@ -67,7 +67,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Version = $"AssemblyVersion: {AssemblyVersion_}, FileVersion: {FileVersion_}",
+        Version = $"AssemblyVersion: {assemblyVersion}, FileVersion: {fileVersion}",
         Title = $"簡單的 CRUD 範例",
         Description = $"ASP.NET Core Web API 簡單的 CRUD 範例 - {convertedUUID_}",
         TermsOfService = new Uri("https://example.com/terms"),
@@ -85,11 +85,11 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // 取得 appsettings.json 的 Seq 設定
-var seqJson_ = builder.Configuration.GetSection("Seq");
+var seqJson = builder.Configuration.GetSection("Seq");
 
 // Use the Seq logging configuration in appsettings.json
 builder.Host.ConfigureLogging(loggingBuilder =>
-    loggingBuilder.AddSeq(seqJson_));
+    loggingBuilder.AddSeq(seqJson));
 
 var app = builder.Build();
 
@@ -110,14 +110,14 @@ app.Services.UseScheduler(scheduler =>
 #endregion 配置 Schedule 任務
 
 // 顯示目前的 Seq 基本設定
-string ServerUrl_ = builder.Configuration.GetValue<string>("Seq:ServerUrl");
-app.Logger.LogInformation($"目前 Seq 的 ServerUrl {ServerUrl_}");
+var serverUrl = builder.Configuration.GetValue<string>("Seq:ServerUrl");
+app.Logger.LogInformation($"目前 Seq 的 ServerUrl 【{serverUrl}】");
 
-string ApiKey_ = builder.Configuration.GetValue<string>("Seq:ApiKey");
-app.Logger.LogInformation($"目前 Seq 的 ApiKey {ApiKey_}");
+var apiKey = builder.Configuration.GetValue<string>("Seq:ApiKey");
+app.Logger.LogInformation($"目前 Seq 的 apiKey 【{apiKey}】");
 
-var AppId_ = Environment.GetEnvironmentVariable("AP_ID");
-app.Logger.LogInformation($"目前的 AppId 【{AppId_}】");
+var appId = Environment.GetEnvironmentVariable("AP_ID");
+app.Logger.LogInformation($"目前的 appId 【{appId}】");
 
 app.Logger.LogInformation($"🐛🐛🐛🐛🐛🐛🐛🐛🐛 {convertedUUID_} 程式啟動 🐛🐛🐛🐛🐛🐛🐛🐛🐛");
 

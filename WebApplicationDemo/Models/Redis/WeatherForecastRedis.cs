@@ -7,6 +7,6 @@ namespace WebApplicationDemo.Models.Redis
         /// <summary>
         /// 一周的天氣預報
         /// </summary>
-        public WeatherForecastData[] Data;
+        public WeatherForecastData[]? Data;
     }
 }

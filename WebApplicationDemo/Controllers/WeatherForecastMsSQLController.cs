@@ -15,9 +15,9 @@ namespace WebApplicationDemo.Controllers
 
         private readonly MsSqlSettings _msSql;
 
-        private string _connectionString;
+        private readonly string _connectionString;
 
-        private readonly string _field = "Summaries";
+        private const string _field = "Summaries";
 
         public WeatherForecastMsSQLController(ILogger<WeatherForecastMsSQLController> logger, ISqlSettings msSqlSetting)
         {
@@ -35,41 +35,42 @@ namespace WebApplicationDemo.Controllers
         [Produces("application/json")]
         public IEnumerable<WeatherForecastMsSQL> Get()
         {
-            string convertedUUID_ = Guid.NewGuid().ToString();
+            var convertedUuid = Guid.NewGuid().ToString();
 
-            _logger.LogInformation($"{convertedUUID_} 🚥 收到 GetWeatherForecastMsSQL");
+            _logger.LogInformation($"{convertedUuid} 🚥 收到 GetWeatherForecastMsSQL");
 
-            using SqlConnection conn_ = new(_connectionString);
-            using SqlCommand cmd_ = conn_.CreateCommand();
-            cmd_.Connection.Open();
-            cmd_.CommandText = @"SELECT * FROM WeatherForecast;";
+            using var conn = new SqlConnection(_connectionString);
+            using var cmd = conn.CreateCommand();
+            cmd.Connection.Open();
+            cmd.CommandText = @"SELECT * FROM WeatherForecast;";
 
-            List<string> Summaries_ = new();
-            using (conn_)
+            List<string?> summaries = new();
+            using (conn)
             {
-                using SqlDataReader reader_ = cmd_.ExecuteReader();
-                while (reader_.Read())
+                using var reader = cmd.ExecuteReader();
+                while (reader.Read())
                 {
-                    var oneField_ = reader_[_field];
-                    if (oneField_ != null)
+                    var oneField = reader[_field];
+                    if (oneField is null)
                     {
-                        string sum_ = Convert.ToString(oneField_);
-                        Summaries_.Add(sum_);
-
-                        _logger.LogInformation($"{convertedUUID_} 🚥 🍳撈取 MS-SQL 資料為 {sum_}");
+                        continue;
                     }
+                    var sum = Convert.ToString(oneField);
+                    summaries.Add(sum);
+
+                    _logger.LogInformation($"{convertedUuid} 🚥 🍳撈取 MS-SQL 資料為 {sum}");
                 }
             }
 
-            cmd_.Connection.Close();
+            cmd.Connection.Close();
 
-            _logger.LogInformation($"{convertedUUID_} 🚥 🍳撈取 MS-SQL 資料結束");
+            _logger.LogInformation($"{convertedUuid} 🚥 🍳撈取 MS-SQL 資料結束");
 
             return Enumerable.Range(1, 5).Select(index => new WeatherForecastMsSQL
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries_[Random.Shared.Next(Summaries_.Count)]
+                Summary = summaries[Random.Shared.Next(summaries.Count)]
             })
             .ToArray();
         }
@@ -83,14 +84,14 @@ namespace WebApplicationDemo.Controllers
         [Produces("application/json")]
         public string Post(string weather)
         {
-            string convertedUUID_ = Guid.NewGuid().ToString();
+            var convertedUuid = Guid.NewGuid().ToString();
 
-            _logger.LogInformation($"{convertedUUID_} 🚥 收到 PostWeatherForecastMsSQL");
+            _logger.LogInformation($"{convertedUuid} 🚥 收到 PostWeatherForecastMsSQL");
 
             //在 WeatherForecast 資料表新增一筆資料
             using SqlConnection conn_ = new(_connectionString);
 
-            using SqlCommand cmd_ = conn_.CreateCommand();
+            using var cmd_ = conn_.CreateCommand();
             cmd_.Connection.Open();
 
             // 取得新增資料後自動產生的 id
@@ -99,7 +100,7 @@ namespace WebApplicationDemo.Controllers
             cmd_.ExecuteScalar();
             cmd_.Connection.Close();
 
-            _logger.LogInformation($"{convertedUUID_} 🚥 【{weather}】 🌱新增資料成功");
+            _logger.LogInformation($"{convertedUuid} 🚥 【{weather}】 🌱新增資料成功");
 
             return $"【{weather}】 新增資料成功";
         }
@@ -113,21 +114,21 @@ namespace WebApplicationDemo.Controllers
         [Produces("application/json")]
         public string Delete(string key)
         {
-            string convertedUUID_ = Guid.NewGuid().ToString();
+            var convertedUuid = Guid.NewGuid().ToString();
 
-            _logger.LogInformation($"{convertedUUID_} 🚥 收到 DeleteWeatherForecastMsSQL");
+            _logger.LogInformation($"{convertedUuid} 🚥 收到 DeleteWeatherForecastMsSQL");
 
             //刪除 WeatherForecast 資料表中 Summaries 欄位值為指定的資料
-            using SqlConnection conn_ = new(_connectionString);
-            using SqlCommand cmd_ = conn_.CreateCommand();
-            cmd_.Connection.Open();
-            cmd_.CommandText = "DELETE FROM WeatherForecast WHERE Summaries=@key";
-            cmd_.Parameters.AddWithValue("@key", key);
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = conn.CreateCommand();
+            cmd.Connection.Open();
+            cmd.CommandText = "DELETE FROM WeatherForecast WHERE Summaries=@key";
+            cmd.Parameters.AddWithValue("@key", key);
 
-            cmd_.ExecuteNonQuery();
-            cmd_.Connection.Close();
+            cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
 
-            _logger.LogInformation($"{convertedUUID_} 🚥 【{key}】 成功🔥刪除");
+            _logger.LogInformation($"{convertedUuid} 🚥 【{key}】 成功🔥刪除");
 
             return $"【{key}】 成功刪除";
         }

@@ -75,7 +75,7 @@ namespace WebApplicationDemo.Controllers
 
                 _logger.LogInformation($"{convertedUUID_} 🚥 🍳撈取 Redis 資料結束");
 
-                WeatherForecastData[] arr_ = Enumerable.Range(1, 5).Select(index => new WeatherForecastData
+                var arr_ = Enumerable.Range(1, 5).Select(index => new WeatherForecastData
                 {
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = Random.Shared.Next(-20, 55),
@@ -88,8 +88,8 @@ namespace WebApplicationDemo.Controllers
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
 
                 return new WeatherForecastRedis()
@@ -129,8 +129,8 @@ namespace WebApplicationDemo.Controllers
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
                 return "發生例外";
             }
@@ -162,8 +162,8 @@ namespace WebApplicationDemo.Controllers
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
                 return "發生例外";
             }
@@ -234,8 +234,8 @@ namespace WebApplicationDemo.Controllers
             }
             catch (Exception ex)
             {
-                var errorLine = new StackTrace(ex, true).GetFrame(0).GetFileLineNumber();
-                var errorFile = new StackTrace(ex, true).GetFrame(0).GetFileName();
+                var errorLine = new StackTrace(ex, true).GetFrame(0)!.GetFileLineNumber();
+                var errorFile = new StackTrace(ex, true).GetFrame(0)!.GetFileName();
                 _logger.LogError("exception EX : {ex}  MSG : {Message} Error Line : {errorFile}.{errorLine}", ex.GetType().FullName, ex.Message, errorFile, errorLine);
                 return "";
             }
