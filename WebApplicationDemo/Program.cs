@@ -31,12 +31,12 @@ builder.Services.AddEndpointsApiExplorer();
 #region 處理 appsettings.json
 // 處理 appsettings.json 要傳送的 MS-SQL 設定
 builder.Services.AddSingleton<ISqlSettings, MsSqlSettings>();
-var MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>();
+var MsSqlSettings_ = builder.Configuration.GetSection("MSSQL").Get<MsSqlSettings>() ?? throw new InvalidOperationException("MSSQL section is missing in appsettings.json");
 builder.Services.AddSingleton<ISqlSettings>(MsSqlSettings_);
 
 // 處理 appsettings.json 要傳送的 Redis 設定
 builder.Services.AddSingleton<ICacheSettings, RedisSettings>();
-var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisSettings>();
+var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisSettings>() ?? throw new InvalidOperationException("Redis section is missing in appsettings.json");
 builder.Services.AddSingleton<ICacheSettings>(redisSettings);
 # endregion 處理 appsettings.json
 
@@ -88,8 +88,7 @@ builder.Services.AddSwaggerGen(options =>
 var seqJson = builder.Configuration.GetSection("Seq");
 
 // Use the Seq logging configuration in appsettings.json
-builder.Host.ConfigureLogging(loggingBuilder =>
-    loggingBuilder.AddSeq(seqJson));
+builder.Logging.AddSeq(seqJson);
 
 var app = builder.Build();
 
