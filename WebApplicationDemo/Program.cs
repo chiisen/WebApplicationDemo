@@ -1,8 +1,10 @@
-﻿using Coravel;
+using Coravel;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Reflection;
 using System.Text;
+using WebApplicationDemo.Helpers;
+using WebApplicationDemo.Middleware;
 using WebApplicationDemo.Models.AppSettings.CacheSettings;
 using WebApplicationDemo.Models.AppSettings.RedisSettings;
 using WebApplicationDemo.Models.AppSettings.SqlSettings;
@@ -43,6 +45,7 @@ builder.Services.AddSingleton<ICacheSettings>(redisSettings);
 #region 處理 cache 的連線
 // 處理 cache (redis) 的連線
 builder.Services.AddSingleton<ICacheService, CacheService>();
+builder.Services.AddSingleton<ILogHelper, LogHelper>();
 #endregion 處理 cache 的連線
 
 
@@ -121,6 +124,8 @@ app.Logger.LogInformation($"目前的 appId 【{appId}】");
 app.Logger.LogInformation($"🐛🐛🐛🐛🐛🐛🐛🐛🐛 {convertedUUID_} 程式啟動 🐛🐛🐛🐛🐛🐛🐛🐛🐛");
 
 // Configure the HTTP request pipeline.
+app.UseExceptionMiddleware();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
